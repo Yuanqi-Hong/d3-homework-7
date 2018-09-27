@@ -90,7 +90,18 @@ function ready(datapoints) {
     .attr('fill', d => colorScale(d.key))
 
   // Add your text on the right-hand side
-
+  svg
+    .selectAll('.price-text')
+    .data(nested)
+    .enter()
+    .append('text')
+    .text(d => d.key)
+    .attr('font-size', 10)
+    .attr('x', d => xPositionScale(d.values[0].datetime))
+    .attr('y', d => yPositionScale(d.values[0].price))
+    .attr('alignment-baseline', 'middle')
+    .attr('text-anchor', 'start')
+    .attr('dx', 5)
 
   // Add your title
   // Add the shaded rectangle
