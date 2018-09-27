@@ -1,6 +1,7 @@
 import * as d3 from 'd3'
 
 // Set up margin/height/width
+var margin = { top: 30, left: 50, right: 100, bottom: 30 }
 
 // Add your svg
 
