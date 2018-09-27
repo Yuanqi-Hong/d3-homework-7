@@ -15,7 +15,7 @@ let svg = d3
   .attr('transform', `translate(${margin.left},${margin.top})`)
 
 // Create a time parser (see hints)
-let parseTime = d3.timeParse('%B-%d')
+let parseTime = d3.timeParse('%B-%y')
 
 // Create your scales
 let xPositionScale = d3.scaleLinear().range([0, width])
@@ -69,7 +69,7 @@ function ready(datapoints) {
   // Add your title
   // Add the shaded rectangle
   // Add your axes
-  let xAxis = d3.axisBottom(xPositionScale).tickFormat(d3.timeFormat('%b %d'))
+  let xAxis = d3.axisBottom(xPositionScale).tickFormat(d3.timeFormat('%b %y'))
   svg
     .append('g')
     .attr('class', 'axis x-axis')
