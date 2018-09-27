@@ -15,7 +15,7 @@ let svg = d3
   .attr('transform', `translate(${margin.left},${margin.top})`)
 
 // Create a time parser (see hints)
-let parseTime = d3.timeParse('%m-%d')
+let parseTime = d3.timeParse('%B-%d')
 
 // Create your scales
 let xPositionScale = d3.scaleLinear().range([0, width])
@@ -31,11 +31,13 @@ d3.csv(require('./housing-prices.csv'))
 // Write your ready function
 function ready(datapoints) {
   // Convert your months to dates
-  
+
   // Get a list of dates and a list of prices
   // Group your data together
   // Draw your lines
-  let max = d3.max(datapoints, d => +d.field_goal_attempts)
+  let maxPrice = d3.max(datapoints, d => +d.price)
+  let maxDate = d3.max(datapoints, d => console.log(parseTime(d.month)))
+  console.log(maxDate)
   // Add your text on the right-hand side
   // Add your title
   // Add the shaded rectangle
