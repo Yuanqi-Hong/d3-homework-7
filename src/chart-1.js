@@ -114,7 +114,14 @@ function ready(datapoints) {
     .text('U.S. housing prices fall in winter')
 
   // Add the shaded rectangle
-
+  svg
+    .append('rect')
+    .attr('width', (width / (datetimes.length / 10)) * 2)
+    .attr('height', height)
+    .attr('x', xPositionScale(parseTime('December-16')))
+    .attr('y', 0)
+    .attr('opacity',0.2)
+    .lower()
 
   // Add your axes
   let xAxis = d3.axisBottom(xPositionScale).tickFormat(d3.timeFormat('%b %y'))
