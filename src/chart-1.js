@@ -2,7 +2,7 @@ import * as d3 from 'd3'
 
 // Set up margin/height/width
 let margin = { top: 30, left: 50, right: 100, bottom: 30 }
-let height = 300 - margin.top - margin.bottom
+let height = 700 - margin.top - margin.bottom
 let width = 700 - margin.left - margin.right
 
 // Add your svg
@@ -19,7 +19,7 @@ let parseTime = d3.timeParse('%B-%d')
 
 // Create your scales
 let xPositionScale = d3.scalePoint().range([0, width])
-let yPositionScale = d3.scaleLinear().range([0, height])
+let yPositionScale = d3.scaleLinear().range([height, 0])
 
 // Create a d3.line function that uses your scales
 
@@ -36,8 +36,9 @@ function ready(datapoints) {
   // Group your data together
   // Draw your lines
   let maxPrice = d3.max(datapoints, d => +d.price)
+  yPositionScale.domain([0,maxPrice])
 
-  let maxDate = d3.max(datapoints, d => console.log(parseTime(d.month)))
+  let maxDate = d3.max(datapoints, d => parseTime(d.month))
 
   // Add your text on the right-hand side
   // Add your title
