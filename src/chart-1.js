@@ -18,10 +18,15 @@ let svg = d3
 let parseTime = d3.timeParse('%B-%d')
 
 // Create your scales
-let xPositionScale = d3.scalePoint().range([0, width])
+let xPositionScale = d3.scaleLinear().range([0, width])
 let yPositionScale = d3.scaleLinear().range([height, 0])
+let colorScale = null
 
 // Create a d3.line function that uses your scales
+let line = d3
+  .line()
+  .x(d => xPositionScale(d.datetime))
+  .y(d => yPositionScale(d.price))
 
 // Read in your housing price data
 d3.csv(require('./housing-prices.csv'))
@@ -31,20 +36,40 @@ d3.csv(require('./housing-prices.csv'))
 // Write your ready function
 function ready(datapoints) {
   // Convert your months to dates
+  datapoints.forEach(d => (d.datetime = parseTime(d.month)))
 
   // Get a list of dates and a list of prices
-  // Group your data together
-  // Draw your lines
-  let maxPrice = d3.max(datapoints, d => +d.price)
-  yPositionScale.domain([0,maxPrice])
+  let datetimes = datapoints.map(d => d.datetime)
+  let prices = datapoints.map(d => d.price)
 
-  let maxDate = d3.max(datapoints, d => parseTime(d.month))
+  // Group your data together
+  let nested = d3
+    .nest()
+    .key(d => d.region)
+    .entries(datapoints)
+
+  // Draw your lines
+  xPositionScale.domain(d3.extent(datetimes))
+  yPositionScale.domain(d3.extent(prices))
+
+  svg
+    .selectAll('.price-line')
+    .data(nested)
+    .enter()
+    .append('path')
+    .attr('class', 'price-line')
+    .attr('d', d => line(d.values))
+    .attr('fill', 'none')
+    .attr('stroke', '#333333')
+    .attr('stroke-width', 2)
+    .lower()
 
   // Add your text on the right-hand side
+
   // Add your title
   // Add the shaded rectangle
   // Add your axes
-  let xAxis = d3.axisBottom(xPositionScale)
+  let xAxis = d3.axisBottom(xPositionScale).tickFormat(d3.timeFormat('%b %d'))
   svg
     .append('g')
     .attr('class', 'axis x-axis')
