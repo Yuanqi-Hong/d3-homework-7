@@ -2,7 +2,7 @@ import * as d3 from 'd3'
 
 // Set up margin/height/width
 let margin = { top: 30, left: 50, right: 100, bottom: 30 }
-let height = 650 - margin.top - margin.bottom
+let height = 600 - margin.top - margin.bottom
 let width = 600 - margin.left - margin.right
 
 // Add svg
@@ -101,10 +101,21 @@ function ready(datapoints) {
     .attr('y', d => yPositionScale(d.values[0].price))
     .attr('alignment-baseline', 'middle')
     .attr('text-anchor', 'start')
-    .attr('dx', 5)
+    .attr('dx', 6)
 
   // Add your title
+  svg
+    .append('text')
+    .attr('x', width / 2)
+    .attr('dx', 10)
+    .attr('y', 0 - margin.top / 2)
+    .attr('text-anchor', 'middle')
+    .attr('font-size', 20)
+    .text('U.S. housing prices fall in winter')
+
   // Add the shaded rectangle
+
+
   // Add your axes
   let xAxis = d3.axisBottom(xPositionScale).tickFormat(d3.timeFormat('%b %y'))
   svg
