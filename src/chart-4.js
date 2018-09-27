@@ -15,4 +15,3 @@ var container = d3.select('#chart-4')
 // Read in your data, then call ready
 
 // Write your ready function
-

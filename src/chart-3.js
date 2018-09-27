@@ -12,4 +12,3 @@ var container = d3.select('#chart-3')
 // Read in your data
 
 // Create your ready function
-
