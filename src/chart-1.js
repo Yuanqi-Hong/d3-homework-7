@@ -85,8 +85,9 @@ function ready(datapoints) {
     .append('circle')
     .attr('class', 'price-circle')
     .attr('r', 3)
-    .attr('cx', d => console.log('d looks like',d))
-    .attr('cy', 10)
+    .attr('cx', d => xPositionScale(d.values[0].datetime))
+    .attr('cy', d => yPositionScale(d.values[0].price))
+    .attr('fill', d => colorScale(d.key))
 
   // Add your text on the right-hand side
 
