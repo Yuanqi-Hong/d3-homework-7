@@ -18,7 +18,7 @@ let svg = d3
 let parseTime = d3.timeParse('%B-%d')
 
 // Create your scales
-let xPositionScale = d3.scaleLinear().range([0, width])
+let xPositionScale = d3.scalePoint().range([0, width])
 let yPositionScale = d3.scaleLinear().range([0, height])
 
 // Create a d3.line function that uses your scales
@@ -36,10 +36,23 @@ function ready(datapoints) {
   // Group your data together
   // Draw your lines
   let maxPrice = d3.max(datapoints, d => +d.price)
+
   let maxDate = d3.max(datapoints, d => console.log(parseTime(d.month)))
-  console.log(maxDate)
+
   // Add your text on the right-hand side
   // Add your title
   // Add the shaded rectangle
   // Add your axes
+  let xAxis = d3.axisBottom(xPositionScale)
+  svg
+    .append('g')
+    .attr('class', 'axis x-axis')
+    .attr('transform', `translate(0,${height})`)
+    .call(xAxis)
+
+  let yAxis = d3.axisLeft(yPositionScale)
+  svg
+    .append('g')
+    .attr('class', 'axis y-axis')
+    .call(yAxis)
 }
