@@ -2,10 +2,10 @@ import * as d3 from 'd3'
 
 // Set up margin/height/width
 let margin = { top: 30, left: 50, right: 100, bottom: 30 }
-let height = 700 - margin.top - margin.bottom
-let width = 700 - margin.left - margin.right
+let height = 650 - margin.top - margin.bottom
+let width = 600 - margin.left - margin.right
 
-// Add your svg
+// Add svg
 let svg = d3
   .select('#chart-1')
   .append('svg')
@@ -14,13 +14,26 @@ let svg = d3
   .append('g')
   .attr('transform', `translate(${margin.left},${margin.top})`)
 
-// Create a time parser (see hints)
+// Create a time parser
 let parseTime = d3.timeParse('%B-%y')
 
 // Create your scales
 let xPositionScale = d3.scaleLinear().range([0, width])
 let yPositionScale = d3.scaleLinear().range([height, 0])
-let colorScale = null
+let colorScale = d3
+  .scaleOrdinal()
+  .range([
+    '#a6cee3',
+    '#1f78b4',
+    '#b2df8a',
+    '#33a02c',
+    '#fb9a99',
+    '#e31a1c',
+    '#fdbf6f',
+    '#ff7f00',
+    '#cab2d6',
+    '#6a3d9a'
+  ])
 
 // Create a d3.line function that uses your scales
 let line = d3
@@ -60,11 +73,23 @@ function ready(datapoints) {
     .attr('class', 'price-line')
     .attr('d', d => line(d.values))
     .attr('fill', 'none')
-    .attr('stroke', '#333333')
+    .attr('stroke', d => colorScale(d.key))
     .attr('stroke-width', 2)
     .lower()
 
+  // Add circles
+  svg
+    .selectAll('.price-circle')
+    .data(nested)
+    .enter()
+    .append('circle')
+    .attr('class', 'price-circle')
+    .attr('r', 3)
+    .attr('cx', d => console.log('d looks like',d))
+    .attr('cy', 10)
+
   // Add your text on the right-hand side
+
 
   // Add your title
   // Add the shaded rectangle
