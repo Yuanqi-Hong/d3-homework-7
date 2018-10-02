@@ -16,7 +16,7 @@ let yPositionScale = d3
   .domain([0, 0.3])
   .range([height, 0])
 
-// Create a d3.line function that uses your scales
+// Create d3.line functions that use your scales
 let line_jp = d3
   .line()
   .x(d => xPositionScale(d.Age))
