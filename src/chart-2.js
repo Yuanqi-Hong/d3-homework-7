@@ -42,6 +42,17 @@ function ready(datapoints) {
     .key(d => d.Year)
     .entries(datapoints)
 
+  let sum_list = d3
+    .nest()
+    .key(d => d.Year)
+    .rollup(v => {
+      return {
+        sum_us: d3.sum(v, d => d.ASFR_us),
+        sum_jp: d3.sum(v, d => d.ASFR_jp)
+      }
+    })
+    .entries(datapoints)
+
   container
     .selectAll('.fertility-graph')
     .data(nested)
@@ -59,18 +70,14 @@ function ready(datapoints) {
         .append('path')
         .datum(d.values)
         .attr('d', line_jp)
-        .attr('stroke', 'lightblue')
         .attr('fill', 'lightblue')
-        .attr('stroke-width', 0.5)
         .attr('opacity', 0.6)
 
       svg
         .append('path')
         .datum(d.values)
         .attr('d', line_us)
-        .attr('stroke', 'pink')
         .attr('fill', 'pink')
-        .attr('stroke-width', 0.5)
         .attr('opacity', 0.9)
         .lower()
 
@@ -82,6 +89,21 @@ function ready(datapoints) {
         .attr('y', 0)
         .attr('text-anchor', 'middle')
         .attr('dy', -10)
+
+      svg
+        .append('text')
+        .datum(sum_list)
+        .text(
+          sum_list.forEach(d => {
+            if (d.key == 1947) {
+              return d.value
+            }
+          })
+        )
+        .attr('font-size', 12)
+        .attr('x', width / 2)
+        .attr('y', height / 2)
+        .attr('text-anchor', 'middle')
 
       let xAxis = d3.axisBottom(xPositionScale)
       svg
@@ -97,3 +119,5 @@ function ready(datapoints) {
         .call(yAxis.ticks(4))
     })
 }
+
+export { xPositionScale, yPositionScale, line_us, line_jp, width, height }

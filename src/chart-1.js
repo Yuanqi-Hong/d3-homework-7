@@ -120,7 +120,7 @@ function ready(datapoints) {
     .attr('height', height)
     .attr('x', xPositionScale(parseTime('December-16')))
     .attr('y', 0)
-    .attr('opacity',0.2)
+    .attr('opacity', 0.2)
     .lower()
 
   // Add your axes
@@ -137,3 +137,5 @@ function ready(datapoints) {
     .attr('class', 'axis y-axis')
     .call(yAxis)
 }
+
+export { xPositionScale, yPositionScale, colorScale, line, width, height }
