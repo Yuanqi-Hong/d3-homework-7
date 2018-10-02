@@ -42,17 +42,6 @@ function ready(datapoints) {
     .key(d => d.Year)
     .entries(datapoints)
 
-  let sum_list = d3
-    .nest()
-    .key(d => d.Year)
-    .rollup(v => {
-      return {
-        sum_us: d3.sum(v, d => d.ASFR_us),
-        sum_jp: d3.sum(v, d => d.ASFR_jp)
-      }
-    })
-    .entries(datapoints)
-
   container
     .selectAll('.fertility-graph')
     .data(nested)
@@ -65,6 +54,9 @@ function ready(datapoints) {
     .attr('transform', `translate(${margin.left},${margin.top})`)
     .each(function(d) {
       let svg = d3.select(this)
+
+      let jpFertilities = d.values.map(d => +d.ASFR_jp)
+      let usFertilities = d.values.map(d => +d.ASFR_us)
 
       svg
         .append('path')
@@ -92,18 +84,25 @@ function ready(datapoints) {
 
       svg
         .append('text')
-        .datum(sum_list)
-        .text(
-          sum_list.forEach(d => {
-            if (d.key == 1947) {
-              return d.value
-            }
-          })
-        )
+        .text(d3.sum(usFertilities).toFixed(2))
         .attr('font-size', 12)
         .attr('x', width / 2)
         .attr('y', height / 2)
         .attr('text-anchor', 'middle')
+        .attr('dx', 25)
+        .attr('dy', -10)
+        .attr('fill', 'pink')
+
+      svg
+        .append('text')
+        .text(d3.sum(jpFertilities).toFixed(2))
+        .attr('font-size', 12)
+        .attr('x', width / 2)
+        .attr('y', height / 2)
+        .attr('text-anchor', 'middle')
+        .attr('dx', 25)
+        .attr('dy', 5)
+        .attr('fill', 'lightblue')
 
       let xAxis = d3.axisBottom(xPositionScale)
       svg
