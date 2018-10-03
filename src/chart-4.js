@@ -36,7 +36,7 @@ function ready(datapoints) {
       datapoints[i].period = '2005 to 2015'
     }
   }
-  
+
   console.log('datapoints look like', datapoints)
 
   let diffs = datapoints.map(d => +d.diff)
@@ -69,10 +69,17 @@ function ready(datapoints) {
         .append('path')
         .datum(d.values)
         .attr('d', line)
-        .attr('fill','black')
+        .attr('fill', 'red')
+        .attr('opacity', 0.7)
 
-
-
+      svg
+        .append('path')
+        .attr('id', 'base-path')
+        .datum(datapoints.filter(d => d.period == '1951 to 1980'))
+        .attr('d', line)
+        .attr('fill', 'lightgray')
+        .lower()
     })
 
+  container.select('#base-path').remove()
 }
