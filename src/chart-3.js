@@ -118,7 +118,7 @@ function ready([datapoints, datapointsUSA]) {
 
       svg
         .selectAll('.axis')
-        .attr('stroke-dasharray', '3 5')
+        .attr('stroke-dasharray', '3 3')
         .attr('stroke-linecap', 'round')
 
       svg
