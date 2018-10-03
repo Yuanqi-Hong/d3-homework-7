@@ -53,6 +53,7 @@ function ready([datapoints, datapointsUSA]) {
     .each(function(d) {
       let svg = d3.select(this)
 
+      // adding USA income line
       svg
         .append('path')
         .datum(datapointsUSA)
@@ -61,6 +62,8 @@ function ready([datapoints, datapointsUSA]) {
         .attr('stroke', '#CFCFCF')
         .attr('stroke-width', 2)
 
+      // adding other countries' income lines
+      // one for every svg
       svg
         .append('path')
         .datum(d.values)
@@ -69,7 +72,34 @@ function ready([datapoints, datapointsUSA]) {
         .attr('stroke', '#A75B7A')
         .attr('stroke-width', 2)
 
-      let xAxis = d3.axisBottom(xPositionScale)
+      // adding titles
+      svg
+        .append('text')
+        .attr('font-size', 14)
+        .attr('font-weight', 'bold')
+        .attr('x', width / 2)
+        .attr('y', 0)
+        .attr('text-anchor', 'middle')
+        .attr('dy', -15)
+        .attr('fill', '#A75B7A')
+        .text(d.key)
+
+      // adding USA label
+      svg
+        .append('text')
+        .attr('font-size', 12)
+        .attr('x', 0)
+        .attr('y', 0)
+        .attr('dx', 5)
+        .attr('dy', 25)
+        .attr('fill', '#A0A0A0')
+        .text('USA')
+
+      // adding axes and grids
+
+      let dollarFormat = d => '$' + d3.format(',')(d)
+
+      let xAxis = d3.axisBottom(xPositionScale).tickFormat(d3.format('d'))
       svg
         .append('g')
         .attr('class', 'axis x-axis')
@@ -78,7 +108,7 @@ function ready([datapoints, datapointsUSA]) {
 
       svg.selectAll('.x-axis path').remove()
 
-      let yAxis = d3.axisLeft(yPositionScale)
+      let yAxis = d3.axisLeft(yPositionScale).tickFormat(dollarFormat)
       svg
         .append('g')
         .attr('class', 'axis y-axis')

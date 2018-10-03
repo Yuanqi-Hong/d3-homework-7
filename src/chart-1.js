@@ -49,7 +49,7 @@ d3.csv(require('./housing-prices.csv'))
 // Write your ready function
 function ready(datapoints) {
   // Convert your months to dates
-  datapoints.forEach(d => (d.datetime = parseTime(d.month)))
+  datapoints.forEach(d => d.datetime = parseTime(d.month))
 
   // Get a list of dates and a list of prices
   let datetimes = datapoints.map(d => d.datetime)
