@@ -127,3 +127,5 @@ function ready([datapoints, datapointsUSA]) {
         .remove()
     })
 }
+
+export { xPositionScale, yPositionScale, line, width, height }

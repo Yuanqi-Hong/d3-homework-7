@@ -138,4 +138,4 @@ function ready(datapoints) {
     .call(yAxis)
 }
 
-export { xPositionScale, yPositionScale, colorScale, line, width, height }
+export { xPositionScale, yPositionScale, colorScale, parseTime, line, width, height }
