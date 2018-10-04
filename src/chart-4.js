@@ -11,12 +11,21 @@ let container = d3.select('#chart-4')
 // Create your scales
 let xPositionScale = d3.scaleLinear().range([0, width])
 let yPositionScale = d3.scaleLinear().range([height, 0])
+let labelPositionScale = d3.scalePoint().domain([]).range([0, width])
 
-// Create your area generator
+// Create your line/area generator
+// ref: https://bl.ocks.org/mbostock/3035090
 let line = d3
   .line()
+  .defined(d => d)
   .x(d => xPositionScale(d.diff))
   .y(d => yPositionScale(d.freq))
+let area = d3
+  .area()
+  .defined(line.defined())
+  .x(line.x())
+  .y1(line.y())
+  .y0(yPositionScale(0))
 
 // Read in your data, then call ready
 d3.tsv(require('./climate-data.tsv'))
@@ -37,10 +46,11 @@ function ready(datapoints) {
     }
   }
 
-  console.log('datapoints look like', datapoints)
-
   let diffs = datapoints.map(d => +d.diff)
   xPositionScale.domain(d3.extent(diffs))
+
+  // get the range of diffs for coloring purpose
+  // console.log('extent of diffs looks like', d3.extent(diffs))
 
   let freqs = datapoints.map(d => +d.freq)
   yPositionScale.domain(d3.extent(freqs))
@@ -63,20 +73,52 @@ function ready(datapoints) {
     .each(function(d) {
       let svg = d3.select(this)
 
-      console.log('d looks like', d)
-
+      // extremely cold
       svg
         .append('path')
-        .datum(d.values)
-        .attr('d', line)
-        .attr('fill', 'red')
+        .datum(d.values.filter(d => d.diff <= -3.6))
+        .attr('d', area)
+        .attr('fill', '#234A9F')
         .attr('opacity', 0.7)
 
+      // cold
+      svg
+        .append('path')
+        .datum(d.values.filter(d => d.diff >= -3.6 && d.diff <= -1.2))
+        .attr('d', area)
+        .attr('fill', '#00ACEA')
+        .attr('opacity', 0.7)
+
+      // normal
+      svg
+        .append('path')
+        .datum(d.values.filter(d => d.diff >= -1.2 && d.diff <= 1.2))
+        .attr('d', area)
+        .attr('fill', '#5F676B')
+        .attr('opacity', 0.7)
+
+      // hot
+      svg
+        .append('path')
+        .datum(d.values.filter(d => d.diff >= 1.2 && d.diff <= 3.6))
+        .attr('d', area)
+        .attr('fill', '#EA5627')
+        .attr('opacity', 0.7)
+
+      // extremely hot
+      svg
+        .append('path')
+        .datum(d.values.filter(d => d.diff >= 3.6))
+        .attr('d', area)
+        .attr('fill', '#ED1C24')
+        .attr('opacity', 0.7)
+
+      // base
       svg
         .append('path')
         .attr('id', 'base-path')
         .datum(datapoints.filter(d => d.period == '1951 to 1980'))
-        .attr('d', line)
+        .attr('d', area)
         .attr('fill', 'lightgray')
         .lower()
     })
