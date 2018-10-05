@@ -1,7 +1,7 @@
 import * as d3 from 'd3'
 
 // I'll give you margins/height/width
-let margin = { top: 100, left: 50, right: 50, bottom: 30 }
+let margin = { top: 100, left: 40, right: 40, bottom: 30 }
 let height = 500 - margin.top - margin.bottom
 let width = 400 - margin.left - margin.right
 
@@ -54,7 +54,7 @@ function ready(datapoints) {
   let diffs = datapoints.map(d => +d.diff)
   xPositionScale.domain(d3.extent(diffs))
 
-  // get the range of diffs for coloring purpose
+  // get the range of diffs
   // console.log('extent of diffs looks like', d3.extent(diffs))
 
   let freqs = datapoints.map(d => +d.freq)
@@ -63,7 +63,7 @@ function ready(datapoints) {
   let nested = d3
     .nest()
     .key(d => d.period)
-    .entries(datapoints)
+    .entries(datapoints.filter(d => d.period != undefined))
 
   container
     .selectAll('.temp-graph')
@@ -128,13 +128,25 @@ function ready(datapoints) {
         .attr('opacity', 0.7)
         .lower()
 
+      // titles
+      svg
+        .append('text')
+        .attr('font-size', 16)
+        .attr('font-weight', 'bold')
+        .attr('x', width / 2)
+        .attr('y', 0)
+        .attr('text-anchor', 'middle')
+        .attr('dy', -20)
+        .text(d.key)
+
       // x axis labels
       labels.forEach(d => {
         svg
           .append('text')
           .attr('id', d)
           .text(d)
-          .style('font-size', '10px')
+          .style('font-size', 10)
+          .attr('font-weight', 'bold')
           .attr('x', labelPositionScale(d))
           .attr('y', height)
           .attr('dy', 15)
@@ -142,7 +154,10 @@ function ready(datapoints) {
       })
 
       // add grids
-      let xAxis = d3.axisBottom(xPositionScale).tickValues([-3.6, -1.2, 1.2, 3.6]).tickFormat('')
+      let xAxis = d3
+        .axisBottom(xPositionScale)
+        .tickValues([-3.6, -1.2, 1.2, 3.6])
+        .tickFormat('')
       svg
         .append('g')
         .attr('class', 'axis x-axis')
@@ -151,8 +166,24 @@ function ready(datapoints) {
       // remove outer frames
       svg.select('.domain').remove()
 
-      // adjust the labels' dx
-      svg.select("text[id='Extremely Cold']").attr('dx', 10)
+      // adjust the labels' dx and give them colors
+      svg
+        .select("text[id='Extremely Cold']")
+        .attr('dx', 20)
+        .attr('fill', '#234A9F')
+      svg
+        .select('#Cold')
+        .attr('dx', 14)
+        .attr('fill', '#00ACEA')
+      svg.select('#Normal').attr('fill', '#5F676B')
+      svg
+        .select('#Hot')
+        .attr('dx', -14)
+        .attr('fill', '#EA5627')
+      svg
+        .select("text[id='Extremely Hot']")
+        .attr('dx', -20)
+        .attr('fill', '#ED1C24')
     })
 
   container.select('#base-path').remove()
