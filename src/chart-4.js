@@ -148,6 +148,8 @@ function ready(datapoints) {
         .attr('class', 'axis x-axis')
         .attr('transform', `translate(0,${height})`)
         .call(xAxis.tickSize(-height))
+      // remove outer frames
+      svg.select('.domain').remove()
 
       // adjust the labels' dx
       svg.select("text[id='Extremely Cold']").attr('dx', 10)
