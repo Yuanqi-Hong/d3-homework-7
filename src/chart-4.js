@@ -1,7 +1,7 @@
 import * as d3 from 'd3'
 
 // I'll give you margins/height/width
-let margin = { top: 100, left: 10, right: 10, bottom: 30 }
+let margin = { top: 100, left: 50, right: 50, bottom: 30 }
 let height = 500 - margin.top - margin.bottom
 let width = 400 - margin.left - margin.right
 
@@ -11,7 +11,12 @@ let container = d3.select('#chart-4')
 // Create your scales
 let xPositionScale = d3.scaleLinear().range([0, width])
 let yPositionScale = d3.scaleLinear().range([height, 0])
-let labelPositionScale = d3.scalePoint().domain([]).range([0, width])
+
+let labels = ['Extremely Cold', 'Cold', 'Normal', 'Hot', 'Extremely Hot']
+let labelPositionScale = d3
+  .scalePoint()
+  .domain(labels)
+  .range([0, width])
 
 // Create your line/area generator
 // ref: https://bl.ocks.org/mbostock/3035090
@@ -79,7 +84,7 @@ function ready(datapoints) {
         .datum(d.values.filter(d => d.diff <= -3.6))
         .attr('d', area)
         .attr('fill', '#234A9F')
-        .attr('opacity', 0.7)
+        .attr('opacity', 0.5)
 
       // cold
       svg
@@ -87,7 +92,7 @@ function ready(datapoints) {
         .datum(d.values.filter(d => d.diff >= -3.6 && d.diff <= -1.2))
         .attr('d', area)
         .attr('fill', '#00ACEA')
-        .attr('opacity', 0.7)
+        .attr('opacity', 0.5)
 
       // normal
       svg
@@ -95,7 +100,7 @@ function ready(datapoints) {
         .datum(d.values.filter(d => d.diff >= -1.2 && d.diff <= 1.2))
         .attr('d', area)
         .attr('fill', '#5F676B')
-        .attr('opacity', 0.7)
+        .attr('opacity', 0.5)
 
       // hot
       svg
@@ -103,7 +108,7 @@ function ready(datapoints) {
         .datum(d.values.filter(d => d.diff >= 1.2 && d.diff <= 3.6))
         .attr('d', area)
         .attr('fill', '#EA5627')
-        .attr('opacity', 0.7)
+        .attr('opacity', 0.5)
 
       // extremely hot
       svg
@@ -111,7 +116,7 @@ function ready(datapoints) {
         .datum(d.values.filter(d => d.diff >= 3.6))
         .attr('d', area)
         .attr('fill', '#ED1C24')
-        .attr('opacity', 0.7)
+        .attr('opacity', 0.5)
 
       // base
       svg
@@ -120,7 +125,32 @@ function ready(datapoints) {
         .datum(datapoints.filter(d => d.period == '1951 to 1980'))
         .attr('d', area)
         .attr('fill', 'lightgray')
+        .attr('opacity', 0.7)
         .lower()
+
+      // x axis labels
+      labels.forEach(d => {
+        svg
+          .append('text')
+          .attr('id', d)
+          .text(d)
+          .style('font-size', '10px')
+          .attr('x', labelPositionScale(d))
+          .attr('y', height)
+          .attr('dy', 15)
+          .attr('text-anchor', 'middle')
+      })
+
+      // add grids
+      let xAxis = d3.axisBottom(xPositionScale).tickValues([-3.6, -1.2, 1.2, 3.6]).tickFormat('')
+      svg
+        .append('g')
+        .attr('class', 'axis x-axis')
+        .attr('transform', `translate(0,${height})`)
+        .call(xAxis.tickSize(-height))
+
+      // adjust the labels' dx
+      svg.select("text[id='Extremely Cold']").attr('dx', 10)
     })
 
   container.select('#base-path').remove()
